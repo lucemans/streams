@@ -1,12 +1,19 @@
 {
   "name": "@lucemans/streams",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "author": "lucemans",
   "main": "index.ts",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepublish": "tsc ./src/index.ts"
+  },
+  "repository": {
+    "url": "https://github.com/lucemans/streams"
+  },
   "dependencies": {
     "@types/redis": "^2.8.28",
     "redis": "^3.0.2",
     "rxjs": "^6.6.3"
-  }
+  },
+  "private": false
 }

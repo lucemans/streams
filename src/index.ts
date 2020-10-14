@@ -32,7 +32,7 @@ export class Stream {
     }
 
     async push(obj: any): Promise<void> {
-        return new Promise<>((acc, rej) => {
+        return new Promise<void>((acc, rej) => {
             this.client.redis.LPUSH(this.topic, obj, (n) => {
                 if (n)
                     acc();
