@@ -1,6 +1,6 @@
 {
   "name": "@lucemans/streams",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "lucemans",
   "main": "index.ts",
   "license": "MIT",
