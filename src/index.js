@@ -64,7 +64,7 @@ var Stream = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (acc, rej) {
-                        _this.client.redis.LPUSH(_this.topic, obj, function (n) {
+                        _this.client.redis.RPUSH(_this.topic, obj, function (n) {
                             if (n)
                                 acc();
                             else
@@ -76,9 +76,12 @@ var Stream = /** @class */ (function () {
     };
     Stream.prototype.ready = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
                 this.readyState = true;
-                this.client.redis.BLPOP(this.topic, this.subject.next);
+                this.client.redis.BLPOP(this.topic, 0, function (err, a) {
+                    _this.subject.next(a[1]);
+                });
                 return [2 /*return*/];
             });
         });

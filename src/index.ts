@@ -1,11 +1,16 @@
 import { Subject } from 'rxjs';
 
+interface RedisInterface {
+    RPUSH: any;
+    BLPOP: any;
+}
+
 export class StreamClient {
 
-    redis: {RPUSH: any, BLPOP: any};
+    redis: RedisInterface;
     streams: { [key: string]: Stream} = {};
 
-    constructor(redis: {RPUSH: any, BLPOP: any}) {
+    constructor(redis: RedisInterface) {
         this.redis = redis;
     }
 
@@ -42,7 +47,6 @@ export class Stream {
     }
 
     async ready() {
-        this.readyState = true;
         this.client.redis.BLPOP(this.topic, 0, (err, a) => {
             this.subject.next(a[1]);
         });
