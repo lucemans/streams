@@ -3,12 +3,13 @@ import { Subject } from 'rxjs';
 interface RedisInterface {
     RPUSH: any;
     BLPOP: any;
+    RPUSHX: any;
 }
 
 export class StreamClient {
 
     redis: RedisInterface;
-    streams: { [key: string]: Stream} = {};
+    streams: { [key: string]: Stream } = {};
 
     constructor(redis: RedisInterface) {
         this.redis = redis;
@@ -25,7 +26,6 @@ export class StreamClient {
 
 export class Stream {
     client: StreamClient;
-    readyState = false;
     subject: Subject<any>;
     topic: string;
 
@@ -35,18 +35,14 @@ export class Stream {
         this.subject = new Subject();
     }
 
-    async push(obj: any): Promise<void> {
-        return new Promise<void>((acc, rej) => {
-            this.client.redis.RPUSH(this.topic, obj, (n) => {
-                if (n)
-                    acc();
-                else
-                    rej(new Error('LPUSH CODE ' + n));
-            });
+    public next(...obj: string[]) {
+        this.client.redis.RPUSH(this.topic, ...obj, (err, n) => {
+            if (err != null)
+                throw err;
         });
     }
 
-    async ready() {
+    ready() {
         this.client.redis.BLPOP(this.topic, 0, (err, a) => {
             this.subject.next(a[1]);
         });
