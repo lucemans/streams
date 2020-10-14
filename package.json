@@ -1,8 +1,8 @@
 {
   "name": "@lucemans/streams",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "lucemans",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "license": "MIT",
   "scripts": {
     "prepublish": "tsc ./src/index.ts"
