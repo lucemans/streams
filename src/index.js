@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.Stream = void 0;
+exports.Stream = exports.StreamClient = void 0;
 var rxjs_1 = require("rxjs");
 var StreamClient = /** @class */ (function () {
     function StreamClient(redis) {
@@ -46,12 +46,12 @@ var StreamClient = /** @class */ (function () {
     StreamClient.prototype.stream = function (topic) {
         if (this.stream[topic])
             return this.stream[topic];
-        this.stream[topic] = new Stream(this, name);
+        this.stream[topic] = new Stream(this, topic);
         return this.stream(topic);
     };
     return StreamClient;
 }());
-exports["default"] = StreamClient;
+exports.StreamClient = StreamClient;
 var Stream = /** @class */ (function () {
     function Stream(client, topic) {
         this.readyState = false;

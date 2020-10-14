@@ -1,19 +1,18 @@
-import { ClientOpts, RedisClient, RedisError } from 'redis';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
-export default class StreamClient {
+export class StreamClient {
 
-    redis: RedisClient;
+    redis: {RPUSH: any, BLPOP: any};
     streams: { [key: string]: Stream} = {};
 
-    constructor(redis: RedisClient) {
+    constructor(redis: {RPUSH: any, BLPOP: any}) {
         this.redis = redis;
     }
 
     stream(topic: string): Stream {
         if (this.stream[topic])
             return this.stream[topic];
-        this.stream[topic] = new Stream(this, name);
+        this.stream[topic] = new Stream(this, topic);
         return this.stream(topic);
     }
 
@@ -33,7 +32,7 @@ export class Stream {
 
     async push(obj: any): Promise<void> {
         return new Promise<void>((acc, rej) => {
-            this.client.redis.LPUSH(this.topic, obj, (n) => {
+            this.client.redis.RPUSH(this.topic, obj, (n) => {
                 if (n)
                     acc();
                 else
@@ -44,6 +43,8 @@ export class Stream {
 
     async ready() {
         this.readyState = true;
-        this.client.redis.BLPOP(this.topic, this.subject.next);
+        this.client.redis.BLPOP(this.topic, 0, (err, a) => {
+            this.subject.next(a[1]);
+        });
     }
 }
