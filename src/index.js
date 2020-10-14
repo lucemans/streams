@@ -78,7 +78,6 @@ var Stream = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                this.readyState = true;
                 this.client.redis.BLPOP(this.topic, 0, function (err, a) {
                     _this.subject.next(a[1]);
                 });
