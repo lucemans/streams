@@ -1,6 +1,6 @@
 {
   "name": "@lucemans/streams",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": "lucemans",
   "main": "src/index.js",
   "license": "MIT",
