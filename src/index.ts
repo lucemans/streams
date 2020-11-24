@@ -1,4 +1,3 @@
-import { Subject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 interface RedisInterface {

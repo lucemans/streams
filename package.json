@@ -2,18 +2,15 @@
   "name": "@lucemans/streams",
   "version": "1.2.0",
   "author": "lucemans",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "license": "MIT",
   "scripts": {
-    "prepublish": "tsc ./src/index.ts"
+    "prepublish": "tsc"
   },
   "repository": {
     "url": "https://github.com/lucemans/streams"
   },
   "dependencies": {
-    "@types/redis": "^2.8.28",
-    "redis": "^3.0.2",
-    "rxjs": "^6.6.3",
     "uuid": "^8.3.1"
   },
   "private": false
