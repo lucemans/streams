@@ -1,6 +1,6 @@
 {
   "name": "@lucemans/streams",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "author": "lucemans",
   "main": "src/index.js",
   "license": "MIT",
@@ -13,7 +13,8 @@
   "dependencies": {
     "@types/redis": "^2.8.28",
     "redis": "^3.0.2",
-    "rxjs": "^6.6.3"
+    "rxjs": "^6.6.3",
+    "uuid": "^8.3.1"
   },
   "private": false
 }
