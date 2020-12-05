@@ -1,12 +1,12 @@
 {
   "name": "@lucemans/streams",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "author": "lucemans",
-  "main": "build/index.js",
+  "main": "src/index.js",
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "tsc"
+    "prepublish": "yarn && tsc"
   },
   "repository": {
     "url": "https://github.com/lucemans/streams"
