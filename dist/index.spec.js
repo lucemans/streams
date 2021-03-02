@@ -8,11 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const _1 = require(".");
-const redis = require('redis-mock');
+const redis_mock_1 = __importDefault(require("redis-mock"));
 describe('Generic Stream', () => {
-    const client = redis.createClient();
+    let client;
+    beforeEach(() => {
+        client = redis_mock_1.default.createClient();
+    });
+    afterEach(() => {
+        client.quit();
+    });
     test('Basic Stream', () => {
         const stream = new _1.GenericStream(client, 'test0');
         expect(stream.redis).toEqual(client);
@@ -41,15 +50,31 @@ describe('Generic Stream', () => {
     }));
 });
 describe('Job Stream', () => {
-    const client = redis.createClient();
+    const client = redis_mock_1.default.createClient();
     test('Basic Stream', () => {
         const stream = new _1.JobStream(client, 'test0');
         expect(stream.redis).toEqual(client);
         expect(stream.topic).toEqual('test0');
     });
-    test('Push to Stream', () => {
+    test('Push to Stream', () => __awaiter(void 0, void 0, void 0, function* () {
         const stream = new _1.JobStream(client, 'test1');
-        stream.push('payload');
-    });
+        const job = yield stream.push('payload');
+        expect(job.nonce).toHaveLength(32);
+        expect(job.value).toBeInstanceOf(Promise);
+    }));
+    test('Pop from Stream', () => __awaiter(void 0, void 0, void 0, function* () {
+        const stream = new _1.JobStream(client, 'test2');
+        const job = yield stream.push('payload');
+        const job2 = yield stream.pop();
+        expect(job2.nonce).toEqual(job.nonce);
+        expect(job2.value).toEqual('payload');
+    }));
+    test('Reply to Stream', () => __awaiter(void 0, void 0, void 0, function* () {
+        const stream = new _1.JobStream(client, 'test2');
+        const job = yield stream.push('payload');
+        const job2 = yield stream.pop();
+        yield stream.reply(job2.nonce, 'world');
+        expect(yield job.value).toEqual('world');
+    }));
 });
 //# sourceMappingURL=index.spec.js.map

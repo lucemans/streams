@@ -47,15 +47,15 @@ class JobStream extends Stream {
             const value = yield new Promise((resolve, reject) => {
                 this.redis.BLPOP(this.topic, 0, (err, value) => __awaiter(this, void 0, void 0, function* () { err ? reject(err) : resolve(value); }));
             });
-            const job_id = value.split(';')[0];
-            const message = value.substr(job_id.length + 1);
-            return message;
+            const job_id = value[1].split(';')[0];
+            const message = value[1].substr(job_id.length + 1);
+            return { nonce: job_id, value: message };
         });
     }
     reply(job_id, payload) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve) => {
-                this.redis.PUBLISH(this.topic + '_' + job_id, () => {
+                this.redis.publish(this.topic + '_' + job_id, payload, () => {
                     resolve();
                 });
             });
@@ -63,17 +63,17 @@ class JobStream extends Stream {
     }
     push(payload) {
         return __awaiter(this, void 0, void 0, function* () {
-            let job_id = uuid_1.v4().replace('-', '');
+            let job_id = uuid_1.v4().replace(/-/g, '');
             yield new Promise((resolve, reject) => { this.redis.RPUSH(this.topic, job_id + ';' + payload, (err, value) => { err ? reject(err) : resolve(value); }); });
             const channel = this.topic + '_' + job_id;
-            this.redis.SUBSCRIBE(channel);
             const result = new Promise((resolve) => {
                 this.redis.on('message', (ch, message) => {
                     if (ch !== channel)
                         return;
-                    this.redis.UNSUBSCRIBE(channel);
+                    this.redis.unsubscribe(channel);
                     resolve(message);
                 });
+                this.redis.subscribe(channel);
             });
             return {
                 nonce: job_id,
